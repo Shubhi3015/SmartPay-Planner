@@ -43,11 +43,11 @@ speak_summary = st.sidebar.checkbox("🔊 Voice Summary")
 submit = st.sidebar.button("Submit")
 
 
-    monthly_rate = interest_rate / 100 / 12
+monthly_rate = interest_rate / 100 / 12
     months = loan_term_years * 12
 
-    monthly_payment = loan_amount / months if monthly_rate == 0 else \
-        loan_amount * monthly_rate / (1 - (1 + monthly_rate) ** -months)
+monthly_payment = loan_amount / months if monthly_rate == 0 else \
+    loan_amount * monthly_rate / (1 - (1 + monthly_rate) ** -months)
 
     st.subheader("📆 Monthly Payment")
     st.success(f"Rs.{monthly_payment:,.2f}")
