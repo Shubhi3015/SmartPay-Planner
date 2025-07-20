@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import pyttsx3
 import datetime
 
 st.markdown(
@@ -33,12 +32,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
-def speak(text):
-    engine = pyttsx3.init()
-    engine.say(text)
-    engine.runAndWait()
-
 st.title("💰 SmartPay Planner")
 
 st.sidebar.header("📋 Loan Inputs")
@@ -49,11 +42,6 @@ start_date = st.sidebar.date_input("Select Loan Start Date", value=datetime.date
 speak_summary = st.sidebar.checkbox("🔊 Voice Summary")
 submit = st.sidebar.button("Submit")
 
-if submit:
-    if speak_summary:
-        speak(f"Loan amount is {loan_amount} rupees")
-        speak(f"Interest rate is {interest_rate} percent")
-        speak(f"Loan term is {loan_term_years} years")
 
     monthly_rate = interest_rate / 100 / 12
     months = loan_term_years * 12
@@ -138,10 +126,6 @@ if submit:
     col1.metric("Monthly EMI", f"Rs.{monthly_payment:,.2f}")
     col2.metric("Total Interest", f"Rs.{total_interest:,.2f}")
     col3.metric("Total Duration", f"{months} months")
-
-    if st.checkbox("🔁 Replay Summary"):
-        speak(f"Your monthly EMI is {monthly_payment:.2f} rupees")
-        speak(f"Total interest payable is {total_interest:.2f} rupees")
 
     st.markdown("""
     <hr style="border: 0.5px solid #666;" />
