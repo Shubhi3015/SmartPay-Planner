@@ -33,8 +33,8 @@ st.markdown(
 )
 
 st.title("💰 SmartPay Planner")
-
 st.sidebar.header("📋 Loan Inputs")
+
 loan_amount = st.sidebar.number_input("Enter the Loan Amount (Rs.)", min_value=1000, step=1000)
 interest_rate = st.sidebar.number_input("Enter the Annual Interest Rate (%)", min_value=0.0, step=0.1)
 loan_term_years = st.sidebar.number_input("Enter the Loan Term (Years)", min_value=1)
@@ -42,17 +42,18 @@ start_date = st.sidebar.date_input("Select Loan Start Date", value=datetime.date
 speak_summary = st.sidebar.checkbox("🔊 Voice Summary")
 submit = st.sidebar.button("Submit")
 
-
-monthly_rate = interest_rate / 100 / 12
+if submit:
+    monthly_rate = interest_rate / 100 / 12
     months = loan_term_years * 12
 
-monthly_payment = loan_amount / months if monthly_rate == 0 else \
-    loan_amount * monthly_rate / (1 - (1 + monthly_rate) ** -months)
+    if monthly_rate == 0:
+        monthly_payment = loan_amount / months
+    else:
+        monthly_payment = loan_amount * monthly_rate / (1 - (1 + monthly_rate) ** -months)
 
     st.subheader("📆 Monthly Payment")
     st.success(f"Rs.{monthly_payment:,.2f}")
 
-  
     schedule = []
     balance = loan_amount
     total_interest = 0
@@ -73,7 +74,6 @@ monthly_payment = loan_amount / months if monthly_rate == 0 else \
     df = pd.DataFrame(schedule, columns=["Month", "Payment", "Interest", "Principal", "Balance"])
     df = df.round(2)
 
-  
     dated_schedule = []
     for i in range(len(df)):
         payment_date = start_date + pd.DateOffset(months=i)
@@ -101,6 +101,7 @@ monthly_payment = loan_amount / months if monthly_rate == 0 else \
     if interest_rate == 0:
         st.warning("Since the interest rate is 0%, this is an interest-free loan.")
 
+    # Download button
     csv = df_with_dates.to_csv(index=False).encode('utf-8')
     st.download_button("⬇️ Download Repayment Schedule", data=csv, file_name="repayment_schedule.csv", mime="text/csv")
 
